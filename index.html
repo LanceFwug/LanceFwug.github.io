@@ -5,17 +5,17 @@
 	Listen to both audio files and choose the one that sounds the best...
   </div>
   <div>
-    <div id="counter" name="counter" hidden=true>1 of 100</div>
-    <div id="resutls" name="resutls" hidden=true>...</div>
+    <div id="counter" name="counter" hidden>1 of 100</div>
+    <div id="resutls" name="resutls" hidden>...</div>
     <form id="testForm" onsubmit="myEntry()">
-        <table id="testTable" hidden=false>
-            <tr id="nameField" hidden=false>
+        <table id="testTable" hidden>
+            <tr id="nameField">
               <td colspan=2>
                 <label for="name" >Name</label>
                 <input type="text" id="name" required />
               </td>
             </tr>
-            <tr id="audioAField" hidden=true >
+            <tr id="audioAField" hidden>
               <td class="button">
                 <input type="radio" id="a" name="choice" class="big" value="1" />
               </td>
@@ -26,7 +26,7 @@
                 </audio>
               </td>
             </tr>
-            <tr id="audioBField" hidden=true>
+            <tr id="audioBField" hidden>
               <td class="button">
                   <input type="radio" id="b" name="choice" class="big" value="2" >
               </td>
@@ -37,7 +37,7 @@
                 </audio>
               </td>
             </tr>
-            <tr id="neitherField" hidden=true>
+            <tr id="neitherField" hidden>
               <td class="button">
                 <input type="radio" id="c" name="choice" class="big" value="3" >
               </td>
