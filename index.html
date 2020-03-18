@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
   <div id="intro">
 	Listen to both audio files and choose the one that sounds the best...
   </div>
@@ -17,42 +15,37 @@
                 <input type="text" id="name" required />
               </td>
             </tr>
-          <tr id="audioAField" hidden=true >
-            <td class="button">
-              <!--div class="bordered"-->
-              <input type="radio" id="a" name="choice" class="big" value="1" />
-              <!--label for="a" >A</label-->
-            <!--/div-->
-          </td>
-          <td>
-            <audio id="audioa" onplay="playFunc('audioa')" controls >
-              <source id="sourcea" src="" type="audio/wav">
-              <!--source src="a.mp3" type="audio/mpeg"-->
-              Your browser does not support the audio element.
-            </audio>
-          </td>
-
-        </tr>
-        <tr id="audioBField" hidden=true>
-          <td class="button">
-              <input type="radio" id="b" name="choice" class="big" value="2" >
-          </td>
-          <td>
-            <audio id="audiob" onplay="playFunc('audiob')" controls>
-              <source id="sourceb" src="" type="audio/wav">
-              Your browser does not support the audio element.
-            </audio>
-          </td>
-        </tr>
-        <tr id="neitherField" hidden=true>
-          <td class="button">
-            <input type="radio" id="c" name="choice" class="big" value="3" >
-          </td>
-          <td>Neither</td>
-        </tr>
-      </table>
-      <input id="startButton" type="submit" value="Start" />
-      <input id="restartButton" type="button" onclick="restart()" value="Reset" />
+            <tr id="audioAField" hidden=true >
+              <td class="button">
+                <input type="radio" id="a" name="choice" class="big" value="1" />
+              </td>
+              <td>
+                <audio id="audioa" onplay="playFunc('audioa')" controls >
+                  <source id="sourcea" src="" type="audio/wav" />
+                  Your browser does not support the audio element.
+                </audio>
+              </td>
+            </tr>
+            <tr id="audioBField" hidden=true>
+              <td class="button">
+                  <input type="radio" id="b" name="choice" class="big" value="2" >
+              </td>
+              <td>
+                <audio id="audiob" onplay="playFunc('audiob')" controls>
+                  <source id="sourceb" src="" type="audio/wav">
+                  Your browser does not support the audio element.
+                </audio>
+              </td>
+            </tr>
+            <tr id="neitherField" hidden=true>
+              <td class="button">
+                <input type="radio" id="c" name="choice" class="big" value="3" >
+              </td>
+              <td>Neither</td>
+            </tr>
+        </table>
+        <input id="startButton" type="submit" value="Start" />
+        <input id="restartButton" type="button" onclick="restart()" value="Reset" />
     </form>
   </div>
 </body>
