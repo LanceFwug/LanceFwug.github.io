@@ -1,3 +1,20 @@
+function getUrlVars() {
+  var vars = {};
+  var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+      vars[key] = value;
+  });
+  return vars;
+}
+
+function getUrlParam(parameter, defaultvalue){
+  var urlparameter = defaultvalue;
+  if(window.location.href.indexOf(parameter) > -1){
+    urlparameter = getUrlVars()[parameter];
+    // alert("here")
+  }
+  return urlparameter;
+}
+
 function hashCode(str) {
   var hash = 0, i, chr;
   if (str.length === 0) return hash;
@@ -9,9 +26,13 @@ function hashCode(str) {
   return hash;
 };
 
-function restart() {
+function restart(nowarn) {
   var localStorage = findStorage();
-  if (confirm("Do you really want to reset progress for this session?")) {
+  var ok = true; 
+  if (!nowarn) {
+    ok = confirm("Do you really want to reset progress for this session?")
+  }
+  if (ok) {
   	localStorage.clear();
 
   	var test = document.getElementById('testForm');
@@ -62,6 +83,16 @@ function findStorage() {
 
 function onLoad() {
   var localStorage = findStorage();
+
+  // console.log(window.location);
+  // var mykey = getUrlParam("key", "none");
+  // // console.log(mykey);
+  // if (mykey != "none") {
+  //  // alert("none");
+  //   return;
+  // }
+  // alert("test");
+  // alert(getUrlParam()["key"]);
   
   if (localStorage.audio == undefined) {
     var audio = [ ['a.wav', 'a.wav'], ['a.wav', 'a.wav'] ]; 
@@ -95,11 +126,12 @@ function onLoad() {
 		localStorage.count = 0;
 	}
 
+  var resetButton = document.getElementById('restartButton');
 	var startButton = document.getElementById('startButton');
 	startButton.value = Number(localStorage.count) == 0 ? 'Start' : 'Next';
-    if (Number(localStorage.count) == Number(localStorage.querylen)) {
-	  startButton.value = 'Finish';
-	}
+  // if (Number(localStorage.count) == Number(localStorage.querylen)) {
+	//   startButton.value = 'Finish';
+	// }
 
 	var counter = document.getElementById('counter');
 
@@ -111,29 +143,37 @@ function onLoad() {
 	var neitherField = document.getElementById('neitherField');
 
 	var choicea = document.getElementById('a');
-    var choiceb = document.getElementById('b');
-    var choicec = document.getElementById('c');
+  var choiceb = document.getElementById('b');
+  var choicec = document.getElementById('c');
 
 	if (Number(localStorage.count) == 0) {
 		testTable.hidden = false;
 		nameField.hidden = false;
-		name.required = true;
+    name.required = true;
+    audioAField.hidden = true;
+		audioBField.hidden = true;
+		neitherField.hidden = true;
 		choicea.required = false;
 		choiceb.required = false;
 		choicec.required = false;
-		counter.hidden = true;
-		intro.innerHTML = "Please enter your name and click Start.";
+    counter.hidden = true;
+    resetButton.hidden = false;
+		intro.innerHTML = "Please enter your name and click START.";
 	} else if (Number(localStorage.count) > 0 && Number(localStorage.count) <= Number(localStorage.querylen)) {
-	  name.required = false;
 	  testTable.hidden = false;
-		nameField.hidden = true;
+    nameField.hidden = true;
+    name.required = false;
 		audioAField.hidden = false;
 		audioBField.hidden = false;
 		neitherField.hidden = false;
-		choicea.required = true;
-		choiceb.required = true;
-		choicec.required = true;
-		counter.hidden = false;
+    choicea.required = true;
+    choicea.checked = false;
+    choiceb.required = true;
+    choiceb.checked = false;
+    choicec.required = true;
+    choicec.checked = false;
+    counter.hidden = false;
+    resetButton.hidden = false;
 		intro.innerHTML = "Listen to both audio files and choose the one that sounds best.";
 
 	  var audioa = document.getElementById('audioa');
@@ -145,11 +185,45 @@ function onLoad() {
 
 	  audioa.load();
 	  audiob.load();
-	}
+  }
+
+  if (localStorage.status == "Finished") {
+	  testTable.hidden = false;
+    nameField.hidden = true;
+    name.required = false;
+		audioAField.hidden = true;
+		audioBField.hidden = true;
+		neitherField.hidden = true;
+		choicea.required = false;
+		choiceb.required = false;
+		choicec.required = false;
+    counter.hidden = true;
+    intro.innerHTML = "Please send the results file to: <p><a href='mailto:lancefwug@gmail.com?Subject=Audio%20Evaluation'>lancefwug@gmail.com</a></p><p>Thank You.</p>";
+    startButton.value = 'Finish';
+    resetButton.hidden = true;
+    localStorage.status = "Reset";
+  }
+  
+  // document.load(); // .close();
+  // document.getElementById('staticrypt-form').style.display = 'none';
+  // document.getElementById('staticrypt-form').style.display = 'block';
+  // document.submit();
+
+  // if (localStorage.myvalue == "one") {
+  //   var test = document.getElementById('testForm');
+  //   localStorage.myvalue = "two";
+  //   // test.submit();
+
+  //   // location.reload();
+  // }
 }
 
-function myEntry() {
-  console.log("submit");
+function myEntry(ev) {
+  // console.log("submit");
+  // ev.preventDefault();
+  // console.log("test");
+  // localStorage.myvalue = "one";
+  
   var name = document.getElementById('name');
 
   if (Number(localStorage.count) == 0) {
@@ -165,8 +239,6 @@ function myEntry() {
   var audiob = document.getElementById('audiob');
   var choicea = document.getElementById('a');
   var choiceb = document.getElementById('b');
-
-
 
   if (Number(localStorage.count) > 0) {
     var aplay = { duration: audioa.duration };
@@ -200,23 +272,35 @@ function myEntry() {
 
   // if we are at the end of the test clear the storage and write out the resutls
   if (Number(localStorage.count) > Number(localStorage.querylen)) {
-    var results = JSON.parse(localStorage.results);
-    results.push(hashCode(localStorage.results));
-    var str = JSON.stringify(results);
-    var blob = new Blob([str], {type: "application/json"});
-    var url = window.URL.createObjectURL(blob);
+    if (localStorage.status == "Reset") {
+      // clear the localStorage
+      // localStorage.clear();
 
-    var downloadLink = document.createElement("a");
-    downloadLink.download = "result_" + localStorage.name + "_" + Date.now() + ".txt";
-    downloadLink.innerHTML = "Download File";
-    downloadLink.href = url;
-    // downloadLink.onclick = destroyClickedElement;
-    downloadLink.style.display = "none";
-    document.body.appendChild(downloadLink);
+      restart(true);
+    } else {
+      localStorage.status = "Finished";
 
-    downloadLink.click();
+      var results = JSON.parse(localStorage.results);
+      results.push(hashCode(localStorage.results));
+      var str = JSON.stringify(results);
+      var blob = new Blob([str], {type: "application/json"});
+      var url = window.URL.createObjectURL(blob);
 
-    // clear the localStorage
-    localStorage.clear();
+      var downloadLink = document.createElement("a");
+      downloadLink.download = "result_" + localStorage.name + "_" + Date.now() + ".txt";
+      downloadLink.innerHTML = "Download File";
+      downloadLink.href = url;
+      // downloadLink.onclick = destroyClickedElement;
+      downloadLink.style.display = "none";
+      document.body.appendChild(downloadLink);
+
+      downloadLink.click();
+    }
+  }
+  
+  if (ev) {
+    ev.preventDefault();
+  } else {
+    onLoad();
   }
 }

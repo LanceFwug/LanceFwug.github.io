@@ -1,52 +1,204 @@
 <!DOCTYPE html>
 <html>
-<body onload="onLoad()">
-  <div id="intro">
-	Listen to both audio files and choose the one that sounds the best...
-  </div>
-  <div>
-    <div id="counter" name="counter" hidden>1 of 100</div>
-    <div id="resutls" name="resutls" hidden>...</div>
-    <form id="testForm" onsubmit="myEntry()">
-        <table id="testTable">
-            <tr id="nameField">
-              <td colspan=2>
+<head>
+    <style>
+        .staticrypt-hr {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+
+        .staticrypt-page {
+            width: 360px;
+            padding: 8% 0 0;
+            margin: auto;
+            box-sizing: border-box;
+        }
+
+        .staticrypt-form {
+            display: inline-table;
+            position: relative;
+            z-index: 1;
+            background: #FFFFFF;
+            max-width: 360px;
+            margin: 0 auto 100px;
+            padding: 45px;
+            text-align: left;
+            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+        }
+
+        .staticrypt-form input {
+            outline: 0;
+            background: #f2f2f2;
+            width: fit-content;
+            border: 0;
+            /* margin: 0 0 15px; */
+            margin: 4px;
+            padding: 15px;
+            box-sizing: border-box;
+            font-size: 14px;
+            
+        }
+
+        .staticrypt-form .rowinput {
+            outline: 0;
+            background: #f2f2f2;
+            width: 100%;
+            border: 0;
+            /* margin: 0 0 15px; */
+            margin: 4px;
+            padding: 15px;
+            box-sizing: border-box;
+            font-size: 14px;
+            
+        }
+
+        .staticrypt-form .staticrypt-decrypt-button {
+            text-transform: uppercase;
+            outline: 0;
+            background: #4CAF50;
+            width: 100%;
+            border: 0;
+            padding: 15px;
+            color: #FFFFFF;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .staticrypt-form .staticrypt-reset-button {
+            text-transform: uppercase;
+            outline: 0;
+            background: darkred;
+            width: 100%;
+            border: 0;
+            padding: 15px;
+            color: #FFFFFF;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .staticrypt-form .staticrypt-decrypt-button:hover, .staticrypt-form .staticrypt-decrypt-button:active, .staticrypt-form .staticrypt-decrypt-button:focus {
+            background: #43A047;
+        }
+
+        .staticrypt-form .staticrypt-reset-button:hover, .staticrypt-form .staticrypt-reset-button:active, .staticrypt-form .staticrypt-reset-button:focus {
+            background: rgba(139, 0, 0, 0.849);
+        }
+
+        .staticrypt-html {
+            height: 100%;
+        }
+
+        .staticrypt-body {
+            margin-bottom: 1em;
+            background: #76b852; /* fallback for old browsers */
+            background: -webkit-linear-gradient(right, #76b852, #8DC26F);
+            background: -moz-linear-gradient(right, #76b852, #8DC26F);
+            background: -o-linear-gradient(right, #76b852, #8DC26F);
+            background: linear-gradient(to left, #76b852, #8DC26F);
+            font-family: "Arial", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .staticrypt-instructions {
+            margin-top: -1em;
+            margin-bottom: 1em;
+        }
+
+        .staticrypt-title {
+            font-size: 1.5em;
+        }
+
+        .staticrypt-footer {
+            position: fixed;
+            height: 20px;
+            font-size: 16px;
+            padding: 2px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin-bottom: 0;
+        }
+
+        .staticrypt-footer p {
+            margin: 2px;
+            text-align: center;
+            float: right;
+        }
+
+        .staticrypt-footer a {
+            text-decoration: none;
+        }
+
+        .divrow {
+          display: inline-flex;
+          align-items: center;
+          margin: 0 0 15px;
+          /*margin: 12px;*/
+        }
+    </style>
+</head>
+<body class="staticrypt-body" onload="onLoad()">
+  <div class="staticrypt-page">
+    <!-- <div class="staticrypt-form"  >
+      <div id="intro" class="staticrypt-instructions">
+      Listen to both audio files and choose the one that sounds the best...
+      </div>
+    </div> -->
+  <div class="staticrypt-form" >
+    <div class="staticrypt-instructions">
+      <div id="intro" class="staticrypt-title" >
+        Listen to both audio files and choose the one that sounds the best...
+      </div>
+      <div id="counter" name="counter" hidden>1 of 100</div>
+      <div id="resutls" name="resutls" hidden>...</div>
+    </div>
+    <form id="testForm"  >
+        <div id="testTable">
+            <div id="nameField">
+              <!-- <div>
                 <label for="name" >Name</label>
-                <input type="text" id="name" required />
-              </td>
-            </tr>
-            <tr id="audioAField" hidden>
-              <td class="button">
+              </div> -->
+              <div>
+                <input type="text" id="name" class="rowinput" placeholder="Name" required />
+              </div>
+            </div>
+            <div id="audioAField" hidden>
+              <!-- <div class="button">
+                
+              </div> -->
+              <div class="divrow">
                 <input type="radio" id="a" name="choice" class="big" value="1" />
-              </td>
-              <td>
                 <audio id="audioa" onplay="playFunc('audioa')" controls >
                   <source id="sourcea" src="" type="audio/wav" />
                   Your browser does not support the audio element.
                 </audio>
-              </td>
-            </tr>
-            <tr id="audioBField" hidden>
-              <td class="button">
-                  <input type="radio" id="b" name="choice" class="big" value="2" >
-              </td>
-              <td>
+              </v>
+            </div>
+            <div id="audioBField" hidden>
+              <div class="divrow">
+                <input type="radio" id="b" name="choice" class="big" value="2" >
                 <audio id="audiob" onplay="playFunc('audiob')" controls>
                   <source id="sourceb" src="" type="audio/wav">
                   Your browser does not support the audio element.
                 </audio>
-              </td>
-            </tr>
-            <tr id="neitherField" hidden>
-              <td class="button">
+              </div>
+            </div>
+            <div id="neitherField" hidden>
+              <div class="divrow">
                 <input type="radio" id="c" name="choice" class="big" value="3" >
-              </td>
-              <td>Neither</td>
-            </tr>
-        </table>
-        <input id="startButton" type="submit" value="Start" />
-        <input id="restartButton" type="button" onclick="restart()" value="Reset" />
+                <div>Neither</div>
+              </div>
+            </div>
+          </div>
+        <div>
+          <input id="startButton" type="button" onclick="myEntry()" value="Start" class="staticrypt-decrypt-button" />
+          <input id="restartButton" type="button" onclick="restart()" value="Reset" class="staticrypt-reset-button" />
+        </div>
     </form>
+  </div>
   </div>
   <script src="./src/js/script.js"></script>
 </body>
